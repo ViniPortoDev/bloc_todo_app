@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/todo_bloc.dart';
+import '../bloc/todo_event.dart';
+import '../models/todo_model.dart';
+
+class TodoItem extends StatelessWidget {
+  final Todo todo;
+
+  const TodoItem({Key? key, required this.todo}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: ListTile(
+        leading: Checkbox(
+          value: todo.isCompleted,
+          onChanged: (_) {
+            context.read<TodoBloc>().add(ToggleTodoStatus(todo));
+          },
+        ),
+        title: Text(
+          todo.title,
+          style: TextStyle(
+            decoration: todo.isCompleted ? TextDecoration.lineThrough : null,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(todo.description),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            context.read<TodoBloc>().add(DeleteTodo(todo));
+          },
+        ),
+      ),
+    );
+  }
+}
