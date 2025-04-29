@@ -5,13 +5,13 @@ import '../bloc/todo_event.dart';
 import '../models/todo_model.dart';
 
 class AddTodoScreen extends StatefulWidget {
-  const AddTodoScreen({Key? key}) : super(key: key);
+  const AddTodoScreen({super.key});
 
   @override
-  _AddTodoScreenState createState() => _AddTodoScreenState();
+  AddTodoScreenState createState() => AddTodoScreenState();
 }
 
-class _AddTodoScreenState extends State<AddTodoScreen> {
+class AddTodoScreenState extends State<AddTodoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -28,6 +28,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nova Tarefa'),
+        backgroundColor: const Color(0xffC40000),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -73,8 +74,19 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                       title: _titleController.text,
                       description: _descriptionController.text,
                     );
-                    
+
+                    // Adiciona a tarefa ao BLoC
                     context.read<TodoBloc>().add(AddTodo(todo));
+
+                    // Mostra uma mensagem rápida para confirmar ao usuário
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Tarefa adicionada com sucesso!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+
+                    // Fecha a tela de adição
                     Navigator.pop(context);
                   }
                 },

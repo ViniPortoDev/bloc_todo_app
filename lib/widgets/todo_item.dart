@@ -7,7 +7,7 @@ import '../models/todo_model.dart';
 class TodoItem extends StatelessWidget {
   final Todo todo;
 
-  const TodoItem({Key? key, required this.todo}) : super(key: key);
+  const TodoItem({super.key, required this.todo});
 
   @override
   Widget build(BuildContext context) {
