@@ -1,3 +1,4 @@
+import 'package:estudos_bloc/screens/add_todo_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/todo_bloc.dart';
@@ -28,11 +29,31 @@ class TodoItem extends StatelessWidget {
           ),
         ),
         subtitle: Text(todo.description),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: () {
-            context.read<TodoBloc>().add(DeleteTodo(todo));
-          },
+        trailing: SizedBox(
+          width: 120,
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  context.read<TodoBloc>().add(DeleteTodo(todo));
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddTodoScreen(
+                        todo: todo,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

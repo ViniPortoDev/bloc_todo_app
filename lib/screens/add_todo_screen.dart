@@ -5,7 +5,9 @@ import '../bloc/todo_event.dart';
 import '../models/todo_model.dart';
 
 class AddTodoScreen extends StatefulWidget {
-  const AddTodoScreen({super.key});
+  final Todo? todo;
+
+  const AddTodoScreen({super.key, this.todo});
 
   @override
   AddTodoScreenState createState() => AddTodoScreenState();
@@ -15,6 +17,15 @@ class AddTodoScreenState extends State<AddTodoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.todo != null) {
+      _titleController.text = widget.todo!.title;
+      _descriptionController.text = widget.todo!.description;
+    }
+  }
 
   @override
   void dispose() {
@@ -69,24 +80,35 @@ class AddTodoScreenState extends State<AddTodoScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    final todo = Todo(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                    );
+                    if (widget.todo != null) {
+                      final updatedTodo = Todo(
+                          id: widget.todo!.id,
+                          title: _titleController.text,
+                          description: _descriptionController.text);
+                      context.read<TodoBloc>().add(UpdateTodo(updatedTodo));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Tarefa editada com sucesso!'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    } else {
+                      final todo = Todo(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        title: _titleController.text,
+                        description: _descriptionController.text,
+                      );
 
-                    // Adiciona a tarefa ao BLoC
-                    context.read<TodoBloc>().add(AddTodo(todo));
+                      // Adiciona a tarefa ao BLoC
+                      context.read<TodoBloc>().add(AddTodo(todo));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Tarefa adicionada com sucesso!'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
 
-                    // Mostra uma mensagem rápida para confirmar ao usuário
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Tarefa adicionada com sucesso!'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-
-                    // Fecha a tela de adição
                     Navigator.pop(context);
                   }
                 },

@@ -14,8 +14,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   // Lista de tarefas em memória para simular um banco de dados
 
-
-  
   final List<Todo> _todos = [];
 
   void _onLoadTodos(LoadTodos event, Emitter<TodoState> emit) {
@@ -81,7 +79,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         );
         emit(TodosLoaded(List.from(_todos)));
       } else {
-        
         // Se a tarefa não for encontrada, emite o estado atual
         emit(TodosLoaded(List.from(_todos)));
       }
